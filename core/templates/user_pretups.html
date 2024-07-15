@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        font-size: 12px;
+    }
+    .btn-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .btn-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 20px;
+    }
+    .btn-item button {
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+    .btn-custom {
+        background-color: #080808;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        padding: 10px 20px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #a9c6e4;
+    }
+    .modal-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .upload-form {
+        margin-top: 20px;
+    }
+    .format-instructions {
+        display: none;
+        margin-top: 10px;
+    }
+    .modal-footer {
+        justify-content: space-between;
+    }
+    .modal-header {
+        background-color: #f8f9fa;
+    }
+    .modal-title {
+        color: #495057;
+    }
+    .table-container {
+        overflow-x: auto;
+    }
+    #data_table {
+        min-width: 100%;
+        white-space: nowrap;
+    }
+    .alert-success {
+        display: none;
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 5px;
+    }
+</style>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between mb-4 align-items-center">
+        <h2>Controle</h2>
+        <div class="d-flex align-items-center">
+            <a href="{% url 'update_test_user_pretups' %}" class="btn btn-primary btn-size">
+                <i class="fas fa-sync-alt"></i> Commencer controle
+            </a>
+            <a href="#" onclick="return confirm('Es-tu sûr de vouloir supprimer toutes les données ?') ? window.location.href='{% url 'supprimer_user_pretups_data' %}' : false;" class="btn btn-danger btn-size ml-3">
+                <i class="fas fa-trash"></i>
+            </a>
+        </div>
+    </div>
+    <!-- Success Messages -->
+    <div id="success-message1" class="alert-success">Fichier inséré avec succès.</div>
+    <div id="success-message2" class="alert-success">Fichier supprimé avec succès.</div>
+
+    <!-- Buttons with descriptions -->
+    <div class="btn-nav">
+        <div class="btn-item">
+            <button type="button" class="btn btn-success btn-size" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+                <i class="fas fa-plus"></i> Ajouter des données
+            </button>
+            <small>Ajouter des données de fiabilisation</small>
+        </div>
+        <div class="btn-item">
+            <button type="button" class="btn btn-info btn-size" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                <i class="fas fa-upload"></i> Télécharger fichier
+            </button>
+            <small>Télécharger des fichiers de suppression</small>
+        </div>
+        <div class="btn-item">
+            <button type="button" class="btn btn-danger btn-size" onclick="return confirm('Es-tu sûr de vouloir supprimer toutes les données ?') ? window.location.href='{% url 'supprimer_user_data' %}' : false;">
+                <i class="fas fa-trash-alt"></i> Supprimer les données
+            </button>
+            <small>Supprimer les données des comptes a supprimer</small>
+        </div>
+        <div>
+            <button id="export_user_pretups_fiable" class="btn btn-success btn-size">
+                <i class="fas fa-file-csv"></i> Exporter
+            </button>
+            <small>Exporter les données au format CSV</small>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table id="data_table" class="table table-striped table-bordered table-sm table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Login ID</th>
+                    <th scope="col">Traitement Fiabilisation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if all_user_pretups_records %}
+                {% for user_pretups_record in all_user_pretups_records %}
+                <tr>
+                    <td><button class="btn btn-primary btn-sm btn-size">{{ user_pretups_record.id }}</button></td>
+                    <td>{{ user_pretups_record.login_id }}</td>
+                    {% if user_pretups_record.traitement_fiabilisation == 'Alerte' %}
+                        <td style="color: rgb(213, 213, 93);background-color: #080808;">{{ user_pretups_record.traitement_fiabilisation }}</td>
+                    {% else%}
+                        <td>{{ user_pretups_record.traitement_fiabilisation }}</td>
+                    {% endif%}
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="btn-nav">
+    <div class="pagination">
+        {% if user_pretups_records.has_previous %}
+        <a href="?page=1" class="p_item">&laquo; Première</a>
+        <a href="?page={{ user_pretups_records.previous_page_number }}" class="p_item">Précédente</a>
+        {% endif %}
+        <span class="current">Page {{ user_pretups_records.number }} sur {{ user_pretups_records.paginator.num_pages }}</span>
+        {% if user_pretups_records.has_next %}
+        <a href="?page={{ user_pretups_records.next_page_number }}" class="p_item">Suivante</a>
+        <a href="?page={{ user_pretups_records.paginator.num_pages }}" class="p_item">Dernière &raquo;</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modals -->
+<!-- Modal 1 -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">Télécharger un fichier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-form">
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'insert_user_pretups' %}" onsubmit="showSuccessMessage('success-message1')">
+                        {% csrf_token %}
+                        <input type="file" name="file" accept=".xlsx, .csv, .xls" required>
+                        <button type="button" class="btn btn-warning btn-size mt-3" onclick="toggleFormatInstructions1()">Afficher les instructions de format</button>
+                        <div class="format-instructions mt-3">
+                            <h3>Format du fichier :</h3>
+                            <p>Login ID</p>
+                            <p>Traitement Fiabilisation</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Télécharger</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2 -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Télécharger un fichier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-form">
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'insert_user_deleted' %}" onsubmit="showSuccessMessage('success-message2')">
+                        {% csrf_token %}
+                        <input type="file" name="file" accept=".xlsx, .csv, .xls" required>
+                        <button type="button" class="btn btn-warning btn-size mt-3" onclick="toggleFormatInstructions2()">Afficher les instructions de format</button>
+                        <div class="format-instructions mt-3">
+                            <h3>Format du fichier :</h3>
+                            <p>Login ID</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Télécharger</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fonction pour basculer l'affichage des instructions de format
+    function toggleFormatInstructions1() {
+        const formatInstructions = document.querySelector('#exampleModal1 .format-instructions');
+        formatInstructions.style.display = formatInstructions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Fonction pour basculer l'affichage des instructions de format pour le deuxième modal
+    function toggleFormatInstructions2() {
+        const formatInstructions = document.querySelector('#exampleModal2 .format-instructions');
+        formatInstructions.style.display = formatInstructions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Fonction pour afficher le message de succès
+    function showSuccessMessage(id) {
+        const successMessage = document.getElementById(id);
+        successMessage.style.display = 'block';
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+    }
+
+    // Export des données au format CSV
+    document.getElementById("export_user_pretups_fiable").addEventListener("click", function () {
+        window.location.href = "{% url 'export_user_pretups_fiable' %}";
+    });
+</script>
+{% endblock %}

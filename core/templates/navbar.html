@@ -1,0 +1,96 @@
+<style>
+    /* Styles pour la barre de navigation */
+    .navbar {
+        background-color: rgb(52, 58, 64); /* Couleur de fond */
+        padding: 10px 0; /* Espacement intérieur */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    }
+
+    .navbar .nav-item {
+        margin-right: 10px; /* Espacement entre les éléments */
+    }
+
+    .navbar .nav-link {
+        color: rgb(254, 254, 254); /* Couleur du texte */
+        font-size: 14px; /* Taille du texte */
+        transition: color 0.3s ease; /* Transition pour l'animation */
+    }
+
+    .navbar .nav-link:hover {
+        color: #a9c6e4; /* Couleur du texte au survol */
+        text-decoration: none; /* Pas de soulignement au survol */
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'adfile' %}"><i class="fas fa-user"
+                            style="color: rgb(18, 43, 152);"></i> Base AD</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'temporaire_drh' %}"><i class="far fa-list-alt"></i> Base DRH</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Autres Liens
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'extraction_nac' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Nac</a></li>
+                        <li><a class="dropdown-item" href="{% url 'extraction_pretups' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Pretups</a></li>
+                        <li><a class="dropdown-item" href="{% url 'extraction_naf' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Naf</a></li>
+                        <li><a class="dropdown-item" href="{% url 'extraction_ussd_osn' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Ussd_osn</a></li>
+                        <li><a class="dropdown-item" href="{% url 'extraction_zoom' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Zoom</a></li>
+                        <li><a class="dropdown-item" href="{% url 'groupe_ad' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Groupe AD</a></li>
+                        <li><a class="dropdown-item" href="{% url 'extraction_zsmart' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> ZSMART</a></li>
+                        <li><a class="dropdown-item" href="{% url 'extraction_ams' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> AMS</a></li>
+                        <li><a class="dropdown-item" href="{% url 'crbtfile' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Comptes CRBT</a></li>
+                        <li><a class="dropdown-item" href="{% url 'user_pretups' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i> Comptes user_pretups</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Controle
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'user_pretups' %}"><i class="fas fa-user"
+                                    style="color: rgb(18, 43, 152);"></i>Controle</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link exit" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Nouvel utilisateur</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login_user' %}">Connexion</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

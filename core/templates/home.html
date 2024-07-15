@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<div class="container mt-5">
+    <div class="jumbotron text-center" style="background-color: #282725; padding: 2rem;">
+        <h1 class="display-4">Bienvenue, {{ user.username }}!</h1>
+        <p class="lead">Nous sommes ravis de vous revoir.</p>
+        <hr class="my-4">
+        <p>Explorez les fonctionnalités de notre site.</p>
+        <div class="d-flex justify-content-around flex-wrap mt-4">
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'home' %}" role="button">Accueil</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'adfile' %}" role="button">Base AD</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'temporaire_drh' %}" role="button">Base DRH</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'extraction_nac' %}" role="button">Nac</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'extraction_pretups' %}" role="button">Pretups</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'extraction_naf' %}" role="button">Naf</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'extraction_ussd_osn' %}" role="button">Ussd_osn</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'extraction_zoom' %}" role="button">Zoom</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'groupe_ad' %}" role="button">Groupe AD</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'extraction_zsmart' %}" role="button">ZSMART</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'extraction_ams' %}" role="button">AMS</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'crbtfile' %}" role="button">Comptes CRBT</a>
+            <a class="btn btn-outline-primary btn-lg m-2" href="{% url 'user_pretups' %}" role="button">Comptes user_pretups</a>
+            <a class="btn btn-outline-danger btn-lg m-2" href="{% url 'logout' %}" role="button">Déconnexion</a>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="container mt-5 col-md-6 offset-md-3">
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <h1 style="color:white">Login</h1>
+    <br />
+    <form action="{% url 'login_user' %}" method="POST" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" class="form-control" name="username" placeholder="Username" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-size btn-primary">Login</button>
+    </form>
+</div>
+
+{% endif %}
+{% endblock %}

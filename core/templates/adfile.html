@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<style>
+
+    body{
+        font-size: 12px;
+    }
+    .btn-nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .p_item {
+        border: 1px black solid;
+        font-size: 12px;
+        margin: 5px;
+    }
+
+    .btn-size {
+        font-size: 11px;
+    }
+
+    .btn-custom {
+        background-color: #080808;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        text-size-adjust: 20px;
+        padding: 10px 20px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #a9c6e4;
+    }
+</style>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between mb-5">
+        <h2>Full AD Accounts</h2>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <a class="nav-link" href="#" onclick="return confirm('Es-tu sûr de vouloir supprimer toutes les données ?') ? window.location.href='{% url 'supprimer_ad_data' %}' : false;">
+                <i class="fas fa-trash" style="color:rgb(220, 66, 66);font-size: 24px;"></i>
+            </a>
+            <div style="margin-right: 30px;">   </div>
+            <button type="button" class="btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fas fa-plus" ></i> Ajouter
+            </button>
+        </div>
+
+    </div>
+    <table id="data_table" class="table table-striped table-bordered table-sm table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Firt Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Display Name</th>
+                <th scope="col">Sam Account Name</th>
+                <th scope="col">Email Address</th>
+                <th scope="col">Account status</th>
+                <th scope="col">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if all_ad_records %}
+            {% for ad_record in all_ad_records %}
+            <tr>
+                <td><a class="btn btn-size btn-primary  btn-sm">{{ ad_record.id }}</a></td>
+                <td>{{ ad_record.first_name }}</td>
+                <td>{{ ad_record.last_name }}</td>
+                <td>{{ ad_record.full_name }}</td>
+                <td>{{ ad_record.display_name }}</td>
+                <td>{{ ad_record.sam_account_name }}</td>
+                <td>{{ ad_record.email_address }}</td>
+                <td>{{ ad_record.account_status }}</td>
+                <td>{{ ad_record.initials }}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<div class="btn-nav">
+    <div class="pagination">
+        {% if ad_records.has_previous %}
+        <a href="?page=1" class="p_item">&laquo; First </a>
+        <a href="?page={{ ad_records.previous_page_number }}" class="p_item">Previous</a>
+        {% endif %}
+
+        <span class="current">Page {{ ad_records.number }} of {{ ad_records.paginator.num_pages }}</span>
+
+        {% if ad_records.has_next %}
+        <a href="?page={{ ad_records.next_page_number }}" class="p_item">Next</a>
+        <a href="?page={{ ad_records.paginator.num_pages }}" class="p_item">Last &raquo;</a>
+        {% endif %}
+    </div>
+    <div>
+    </div>
+</div>
+
+<!-- Bouton pour ouvrir la modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upload AD File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Upload de fichier AD -->
+
+                <form method="POST" enctype="multipart/form-data" action="{% url 'insert_admp' %}">
+                    {% csrf_token %}
+                    <input type="file" name="file" accept=".xlsx, .csv, .xls" required>
+
+                    <style>
+                        /* Styles pour cacher l'élément par défaut */
+
+                        .item_pos {
+                            display: flex;
+                            flex-direction: row;
+                            column-gap: 10px;
+                            margin-top: 5px;
+                        }
+                    </style>
+                    <div id="show" style="display: none;">
+                        <h3>Format fichier</h3>
+                        <p>ID</p>
+                        <p>Firt Name</p>
+                        <p>Last Name</p>
+                        <p>Full Name</p>
+                        <p>Display Name</p>
+                        <p>Sam Account Name</p>
+                        <p>Email Address</p>
+                        <p>Account status</p>
+                        <p>Initials</p>
+                    </div>
+                    <div class="item_pos">
+                        <div>
+                            <button type="button" class="btn btn-warning" onclick="toggleElement()">Formats
+                                fichier</button>
+                        </div>
+                    </div>
+                    <script>
+                        function toggleElement() {
+                            const show = document.getElementById("show");
+                            show.style.display = (show.style.display === "none") ? "block" : "none";
+                        }
+                    </script>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

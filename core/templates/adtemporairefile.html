@@ -1,0 +1,42 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Upload fichier des temporaires de la DRH</h1>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'insert_tmp_drh'%}">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+    <style>
+        .item_pos{
+            display: flex;
+            flex-direction: row;
+            column-gap: 10px;
+        }
+    </style>
+    <div id="show"  style="display: none;">
+        <h3>Format fichier</h3>
+        <p>username</p>
+        <p>date_end</p>
+    </div>
+    <div class="item_pos">
+        <div>
+            <a class="nav-link" href="{% url 'temporaire_drh' %}">
+                <button type="submit" class="btn btn-secondary">
+                    Retourner
+                </button>
+            </a>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-warning" onclick="toggleElement()">Formats fichier</button>
+        </div>
+    </div>
+    <script>
+        function toggleElement() {
+            const show = document.getElementById("show");
+            show.style.display = (show.style.display === "none") ? "block" : "none";
+        }
+    </script>
+</div>
+{% endblock%}

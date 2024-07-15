@@ -1,0 +1,109 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ASN Fiabilisation</title>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+
+
+    <style>
+        body {
+            background-image: url('{% static "images/Website-Design-Background.png" %}');
+            background-size: cover;
+            /* Ajuste la taille de l'image pour remplir toute la zone */
+            background-repeat: no-repeat;
+            /* Empêche la répétition de l'image */
+            color: grey;
+            margin-bottom: 100px;
+            background-color: #333;
+        }
+
+        h3 {
+            margin-top: 5px;
+            font-size: medium;
+        }
+
+        h2 {
+            color: aliceblue;
+        }
+
+        .pagination>* {
+            color: white;
+        }
+
+        footer {
+            background-color: #333;
+            /* Couleur de fond */
+            color: #fff;
+            /* Couleur du texte */
+            padding: 20px;
+            /* Espacement interne */
+            text-align: center;
+            /* Alignement du texte */
+            position: fixed;
+            /* Fixer le footer en bas de la page */
+            width: 100%;
+            /* Largeur pleine */
+            bottom: 0;
+            /* Placer en bas */
+        }
+
+        .footer-content {
+            margin-bottom: 20px;
+            /* Espacement en bas du contenu */
+        }
+
+        .footer-links ul {
+            list-style-type: none;
+            /* Supprimer les puces de la liste */
+            padding: 0;
+            /* Supprimer le padding */
+        }
+
+        .footer-links ul li {
+            display: inline;
+            /* Afficher les éléments de liste en ligne */
+            margin-right: 10px;
+            /* Espacement entre les éléments de liste */
+        }
+
+        .footer-links ul li a {
+            color: #fff;
+            /* Couleur du texte des liens */
+            text-decoration: none;
+            /* Supprimer la soulignement */
+        }
+
+        .footer-links ul li a:hover {
+            text-decoration: underline;
+            /* Soulignement au survol */
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        <br />
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="{% static 'js/main.js' %}"></script>
+
+ 
+</body>
+
+</html>
